@@ -407,8 +407,55 @@ temperatures increasing during the day then cooling down in the evening.
 Throughout the month, the average temperature is shown to be steadily
 increasing. Higher relative humidity is also associated with higher
 temperature.</p>
-<pre class="r"><code>ggsave(&quot;jan_weather_scatterplot.png&quot;, height = 4, width = 6)</code></pre>
+<pre class="r"><code>ggsave(&quot;jan_weather_scatterplot.png&quot;, height = 5, width = 7)</code></pre>
 <p><strong>Problem 2</strong></p>
+<pre class="r"><code>weather_df = tibble(
+  x = rnorm(10),
+  log_vector = x &gt; 0,
+  char_vector = c(&quot;My&quot;, &quot;name&quot;, &quot;is&quot;, &quot;Amanda&quot;, &quot;and&quot;, &quot;I&quot;, &quot;am&quot;, &quot;enrolled&quot;, &quot;in&quot;, &quot;P8105&quot;),
+  factor_vector = factor(sample(c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), 10, replace = TRUE))
+)</code></pre>
+<pre class="r"><code>weather_df %&gt;%
+  pull(x) %&gt;%
+  mean(na.rm=TRUE)</code></pre>
+<pre><code>## [1] 0.8448026</code></pre>
+<pre class="r"><code>weather_df %&gt;%
+  pull(log_vector) %&gt;%
+  mean(na.rm=TRUE)</code></pre>
+<pre><code>## [1] 0.8</code></pre>
+<pre class="r"><code>weather_df %&gt;%
+  pull(char_vector) %&gt;%
+  mean(na.rm=TRUE)</code></pre>
+<pre><code>## Warning in mean.default(., na.rm = TRUE): argument is not numeric or logical:
+## returning NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>weather_df %&gt;%
+  pull(factor_vector) %&gt;%
+  mean(na.rm=TRUE)</code></pre>
+<pre><code>## Warning in mean.default(., na.rm = TRUE): argument is not numeric or logical:
+## returning NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<p>I am able to take the mean of the random sample <code>x</code> and
+logical vector <code>log_vector</code> but not of the character vector
+<code>char_vector</code> and factor vector <code>factor_vector</code>.
+This is due to <code>x</code> and <code>log_vector</code> being numeric
+variables while the other 2 are string variables, which we cannot take
+the mean of.</p>
+<pre class="r"><code>as.numeric(weather_df$log_vector)
+as.numeric(weather_df$char_vector)
+as.numeric(weather_df$factor_vector)</code></pre>
+<p>The <code>as.numeric</code> function changes the logical variable
+from <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to
+<code>0</code> since coercion makes logical variables automatically
+become numeric. This explains why we were able to take the mean. For the
+character variable, values are all changed to <code>NA</code> and we get
+the warning <code>NAs introduced by coercion</code> since there are no
+meaningful numeric values, even after coercion. This explains why no
+mean could be taken. For the factor variable, <code>a</code> is changed
+to <code>1</code>, <code>b</code> is changed to <code>2</code>, and
+<code>c</code> is changed to <code>3</code>, their underlying integer
+codes. However, we were still unable to take the mean because the factor
+levels didn’t have numeric measures originally.</p>
 
 
 

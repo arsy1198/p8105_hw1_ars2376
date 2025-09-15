@@ -36,7 +36,44 @@ jan_weather_scatterplot <- early_january_weather |>
 The scatterplot displays a cyclical pattern, representing temperatures increasing during the day then cooling down in the evening. Throughout the month, the average temperature is shown to be steadily increasing. Higher relative humidity is also associated with higher temperature.
 
 ```{r}
-ggsave("jan_weather_scatterplot.png", height = 4, width = 6)
+ggsave("jan_weather_scatterplot.png", height = 5, width = 7)
 ```
 
 **Problem 2**
+
+```{r}
+weather_df = tibble(
+  x = rnorm(10),
+  log_vector = x > 0,
+  char_vector = c("My", "name", "is", "Amanda", "and", "I", "am", "enrolled", "in", "P8105"),
+  factor_vector = factor(sample(c("a", "b", "c"), 10, replace = TRUE))
+)
+```
+
+```{r}
+weather_df %>%
+  pull(x) %>%
+  mean(na.rm=TRUE)
+
+weather_df %>%
+  pull(log_vector) %>%
+  mean(na.rm=TRUE)
+
+weather_df %>%
+  pull(char_vector) %>%
+  mean(na.rm=TRUE)
+
+weather_df %>%
+  pull(factor_vector) %>%
+  mean(na.rm=TRUE)
+``` 
+
+I am able to take the mean of the random sample `x` and logical vector `log_vector` but not of the character vector `char_vector` and factor vector `factor_vector`. This is due to `x` and `log_vector` being numeric variables while the other 2 are string variables, which we cannot take the mean of.
+
+```{r,results="hide", warning=FALSE}
+as.numeric(weather_df$log_vector)
+as.numeric(weather_df$char_vector)
+as.numeric(weather_df$factor_vector)
+```
+
+The `as.numeric` function changes the logical variable from `TRUE` to `1` and `FALSE` to `0` since coercion makes logical variables automatically become numeric. This explains why we were able to take the mean. For the character variable, values are all changed to `NA` and we get the warning `NAs introduced by coercion` since there are no meaningful numeric values, even after coercion. This explains why no mean could be taken. For the factor variable, `a` is changed to `1`, `b` is changed to `2`, and `c` is changed to `3`, their underlying integer codes. However, we were still unable to take the mean because the factor levels didn't have numeric measures originally.
